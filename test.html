@@ -1,0 +1,43 @@
+<html>
+<head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+
+</head>
+
+<body>
+<form name="form2">
+
+<div>
+<input type="file"  name="myFile"   id="myFile" onchange="readURL(this);"></input>
+</div>
+
+<div>
+<img id="previewImg" src="#" />
+</div>
+
+</form>
+<script>
+
+function readURL(input) {
+
+if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+        $('#previewImg')
+            .attr('src', e.target.result)
+            .width(130);
+    }
+reader.readAsDataURL(input.files[0]);
+
+}else{
+          var filename = "";
+         filename = "file:\/\/"+input.value;
+         document.form2.previewImg.src=filename;
+         document.form2.previewImg.style.width="130px";
+
+ }
+}
+ </script>   
+</body>
+</html>
