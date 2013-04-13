@@ -1,14 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<!DOCTYPE html>
+<html xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Untitled Document</title>
-
-
-<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="jquery-1.8.3.min.js" type="text/javascript"></script>
 <!--<script src="http://cdn.jquerytools.org/1.2.7/tiny/jquery.tools.min.js"></script>-->
+<script src="jquery.tools.min.js"></script>
 <script src="jquery.form.js" type="text/javascript"></script>
-<script src="jquery.validate.js" type="text/javascript"></script>
+
+<!--<script src="jquery.validate.js" type="text/javascript"></script>-->
 
 
 <style type="text/css">
@@ -50,6 +50,12 @@
   #show_preview, #save_profile{
 	  display:none;
   }
+  .picture_preview{
+	  display:none;
+  }
+  #user_login{
+	  display:none;
+  }
   </style>
 </head>
 <body>
@@ -57,87 +63,86 @@
 <div id="fb-root"></div>
 
 
-
+<div id="user_login">
 <!--<fb:login-button autologoutlink="true" perms="email,user_birthday,status_update,publish_stream,user_about_me"></fb:login-button>-->
-<fb:login-button login_text="Insertar datos" class="login_fb" ></fb:login-button>
- <div id="login"></div>
- <div id="name" data-value="0"></div>
+<div class="user_data">
+<fb:login-button login_text="Insertar datos" autologoutlink="true" class="login_fb" ></fb:login-button>
 <form id="login_form" action="send.php" name="form" enctype="multipart/form-data" method="post" >
-	<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
-<script type="text/javascript">
-          function showRecaptcha() {
-            Recaptcha.create("6Lcfyt8SAAAAAHQEWRd_wMqJG-bGdgypv_f0y7OB", 'captchadiv', {
-                tabindex: 1,
-                theme: "red",
-                callback: Recaptcha.focus_response_field
-            });
-          }
-        </script>
-  <label>
-  nombre </label>
-  <input name="nombre" type="text" id="nombre" required="required">
+     
+  <label>nombre </label>
+  <input name="nombre" type="text" id="nombre" required/>
  
   <br> 
-  <label>
-  documento</label>
-  <input name="documento" type="text" id="documento" required="required">
+  <label>documento</label>
+  <input name="documento" type="text" id="documento" required/>
   
   <br> 
-  <label>
-  ciudad</label>
-  <input name="ciudad" type="text" id="ciudad" required="required">
+  <label>ciudad</label>
+  <input name="ciudad" type="text" id="ciudad" required/>
   
   <br> 
-  <label>
-  telefono</label>
-  <input name="telefono" type="text" id="telefono" required="required">
+  <label>telefono</label>
+  <input name="telefono" type="text" id="telefono" required/>
   
   <br>   
-  <label>
-  email</label> 
-  <input name="email" type="email" id="email" required="required">
+  <label>email</label> 
+  <input name="email" type="email" id="email" required/>
   
   <br>
-  <label>
-  estudio </label>
-  <input name="estudio" type="text" id="estudio" required="required">
+  <label>estudio </label>
+  <input name="estudio" type="text" id="estudio" required/>
  
   <br>
   <label>area interes</label>
-  <select id="program_principal" name="modalidad">
-    <option value="1">Presencial</option>
-    <option value="2">Virtual</option>
+    <select id="program_principal" name="modalidad">
+        <option value="1">Presencial</option>
+        <option value="2">Virtual</option>
     </select>
     <select id="program_type" name="tipo_programa">
-    <option value="1">Pregrado</option>
-    <option value="2">Postgrado</option>
+        <option value="1">Pregrado</option>
+        <option value="2">Postgrado</option>
     </select>
     <select id="program" name="programa">
-   </select>
+    </select>
   
   <br>
-  <label>subir foto</label>
-  <input name="foto" type="text" id="foto" required="required">
-  <input type="button" class="select_picture" value="Cargar Foto" /> 
+  <label>Foto Perfil</label>
   <div class="profile_pic"></div>
-  
-  <br>
-
-  <label>puesto </label> 
-  <input name="puesto" type="text" id="puesto" required="required">
+  <input name="foto" type="hidden" id="foto" required/>
+  <input type="button" class="select_picture" value="Cargar Foto" /> 
+  <input name="puesto" type="hidden" id="puesto" required/>
   <br />
-  <div id="captchadiv"></div>
-  <br />
-  <input id="action1" type="submit" value="Subir">
+  <div id="enviar_registro"></div>
+  <!--<input id="action1" type="submit" value="Subir"/>-->
 </form>
-<form style="display:none;" id="form1" name="form1" action="uploader.php" enctype="multipart/form-data" method="post">
+<form id="captcha" action="captcha.php" method="post">
+   <?php include("captcha.php"); echo recaptcha_get_html($publickey, $error);?>
+    <input type="submit" value="Comprobar Captcha" />
+</form>
+</div>
+<div class="picture_preview">
+<form id="form1" name="form1" action="uploader.php" enctype="multipart/form-data" method="post">
 	<input name="image" type="file" id="image"> 
-    <input name="valido" type="checkbox" id="valido" />
     <div class="preview"></div>
+    <label>Confirmar imagen</label><input name="valido" type="checkbox" id="valido" />
     <input id="save_profile" type="button" value="guardar" />
     <input id="show_preview" type="submit" value="ver">
 </form>
+</div>
+<!--<input type="button" value="cargar fb" class="cargar_fb_datos"/>-->
 <div class="resultado_consulta"></div>
+</div>
+<?php
+ mysql_connect("localhost","coloral_cargaimg","color");
+ mysql_select_db("coloral_cargaimg");  
+ $re=mysql_query("select * from  users") or die(mysql_error());
+ echo '<div class="cod_container">';
+ while($f=mysql_fetch_array($re)){
+ 	echo'<div class="puesto_cont" id="'.$f['puesto'].'"><div class="info_dialog">'.$f['nombre'].'<br>'.$f['email'].'</div><img class="profile_thumb" src="'.$f['foto'].'"/></div>';
+ }
+ echo '</div>';
+?>
+</div>
 <div class="puestos_container">
 	<?php for($i=1; $i<=60;$i++){ 
             //if($i==$f['codigo'])
@@ -146,6 +151,8 @@
     <?php } ?>
     <div class="clear"></div>
 </div>
+<div class="share" onClick="share();">compartir</div>
+<div class="stream" onClick="showStream();">stream</div>
 <script type="text/javascript">
 	window.fbAsyncInit = function() {
 		FB.init({appId: '239728666173010', status: true, cookie: true, xfbml: true});
@@ -163,7 +170,7 @@
 		FB.getLoginStatus(function(response) {
 			if (response.session) {
 				// logged in and connected user, someone you know
-				//login();
+				login();
 			}
 		});
 	};
@@ -180,13 +187,13 @@
 		FB.api('/me', function(response) {
 			
 			
-			 $(".cargar_fb_datos").click();
+			 fqlQuery();
 			 $(".select_picture").hide();
 		});
 		
 	}
 	function logout(){
-		document.getElementById('login').style.display = "none";
+		$(".select_picture").show();
 	}
 
 	//stream publish method
@@ -214,14 +221,14 @@
 	function showStream(){
 		FB.api('/me', function(response) {
 			//console.log(response.id);
-			streamPublish(response.name, 'Thinkdiff.net contains geeky stuff', 'hrefTitle', 'http://thinkdiff.net', "Share thinkdiff.net");
+			streamPublish(response.name, 'coloralcuadrado.com Esta en busqueda de la silla ganadora ¿Que esperas tu para encontrar la tuya?', 'hrefTitle', 'http://coloralcuadrado.com', "Share coloralcuadrado.com");
 		});
 	}
 
 	function share(){
 		var share = {
 			method: 'stream.share',
-			u: 'http://thinkdiff.net/'
+			u: 'http://coloralcuadrado.com/'
 		};
 
 		FB.ui(share, function(response) { console.log(response); });
@@ -293,6 +300,7 @@
 
 
 $(function(){
+	
 	$(".puesto").click(function(){
 		
 		var pcheck = $(this).attr("id");
@@ -301,6 +309,7 @@ $(function(){
 			$("#puesto").val(pcheck);
 			$(".puesto").removeClass("selected");
 			$(this).addClass("selected");
+			openlogin();
 		}
 	});
 	var eche = $(".cod_container div:nth-child(n)");
@@ -336,27 +345,76 @@ $(function(){
 					$('.preview').fadeIn('slow'); 
 				} 
     		});
-	 $('#login_form').ajaxForm({ 
+	/*$('#captcha').submit(function() { // catch the form's submit event
+			$.ajax({ // create an AJAX call...
+				data: $(this).serialize(), // get the form data
+				type: $(this).attr('method'), // GET or POST
+				url: $(this).attr('action'), // the file to call
+				success: function(response) { // on success..
+					$('#enviar_registro').html(response); // update the DIV
+				}
+			});
+			return false; // cancel original event to prevent form submitting
+		});*/
+		$('#captcha').ajaxForm({ 
+				target: '#enviar_registro', 
+				success: function() { 
+						$('#enviar_registro').fadeIn('slow');
+				} 
+    		});	
+	$('#login_form').ajaxForm({ 
+				beforeSubmit: validate,
 				target: '.resultado_consulta', 
 				success: function() { 
 					var vaciado = $('.resultado_consulta').html(); 
 					if(vaciado == ''){
-						window.location.reload();
+						//window.location.reload();
 					}
 				} 
-    		});		
-	$("#login_form").validate();
+    		});	
+	//$("#login_form").validator();
 	$(".select_picture").click(function(){
-		$("#form1").show();
+		$(".picture_preview").show();
 	});
 	
 	setTimeout(function(){		
 		fqlQuery();
-		showRecaptcha();
 	},1000);
+	function openlogin(){
+		$("#user_login").overlay({
+			top: 260,
+			mask: {
+				color: '#fff',
+				loadSpeed: 200,
+				opacity: 0.5
+			},
+			//closeOnClick: false,
+			load: true
+		});
+	}
 });
 
-
+function validate(formData, jqForm, options) { 
+    // formData is an array of objects representing the name and value of each field 
+    // that will be sent to the server;  it takes the following form: 
+    // 
+    // [ 
+    //     { name:  username, value: valueOfUsernameInput }, 
+    //     { name:  password, value: valueOfPasswordInput } 
+    // ] 
+    // 
+    // To validate, we can examine the contents of this array to see if the 
+    // username and password fields have values.  If either value evaluates 
+    // to false then we return false from this method. 
+ 
+    for (var i=0; i < formData.length; i++) { 
+        if (!formData[i].value) { 
+            alert('Todos los campos deben estar completos'); 
+            return false; 
+        } 
+    } 
+    alert('Listo'); 
+}
 /*function setsubmit()
 	{
 	  document.form1.target='_self';
